@@ -1,0 +1,7 @@
+
+__pycache__/
+
+myapp.egg-info/
+
+#python environment
+myenv/
