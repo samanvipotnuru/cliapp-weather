@@ -12,9 +12,9 @@ class TestCLIApp(unittest.TestCase):
 
     def test_logIn(self):
         def inpt(s):
-            return 'sams'
+            return 'test'
         def passw(s):
-            return 'new'
+            return 'password'
         cli.input = inpt
         cli.getpass = passw
         user = cli.logIn()
@@ -39,19 +39,19 @@ class TestCLIApp(unittest.TestCase):
     def test_makeAPIcall(self,mocked_input):
         inputList = ['1','london','3','4','']
         mocked_input.side_effect = ['1','london','3','4','']
-        cli.makeAPIcall()
+        cli.makeAPIcall('')
         mocked_input.side_effect = ['3']
-        cli.makeAPIcall()
+        cli.makeAPIcall('')
         mocked_input.side_effect = ['1','33.33','99.99','3','4','']
-        cli.makeAPIcall()
+        cli.makeAPIcall('')
         mocked_input.side_effect = ['some','1','london','3','4','']
-        cli.makeAPIcall()
+        cli.makeAPIcall('')
     
 
     @mock.patch('myapp.cli.input',create=True)
     def test_updateInfo(self,mocked_input):
-        mocked_input.side_effect = ['1','sams','']
-        user = cli.appUser('Sam','sams','9717eab6a57ca64171aafc6e17b03367',b'\xab\xe9\xd1\xb1\x92"K\x19R\xd7\x15\xd3;\xab\xf5\xd0')
+        mocked_input.side_effect = ['1','test','']
+        user = cli.appUser('Test01','test','00f6dbdeb284a01ba015077d27854f0a',b'\xa1\xaa\xe3\x95O\xc5\xf5\xbeU\xdc\x92\xdcj\x1a\x00p')
         cli.updateInfo(user)
     
     @mock.patch('myapp.cli.input',create=True)
