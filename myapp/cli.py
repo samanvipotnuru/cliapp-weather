@@ -142,33 +142,22 @@ def display(info):
         click.echo("Information unavailable.")
 
 @click.command(help="Use it find the weather")
-def weather():
+@click.option('--location','-l',default = '',help='Location')
+def weather(location):
+    click.echo(location)
     user = extractUser()
     if(user.loggedIn!=True):
         click.echo("You're not allowed to use this feature. You need to log in first.")
         user = logIn()
-    makeAPIcall()
+    makeAPIcall(location)
 
-def makeAPIcall():
+def makeAPIcall(location):
     os.system('cls' if os.name == 'nt' else 'clear')
     dateList = dict()
-    click.echo("Choose one of the two formats(for location):\n1. Name of the city\n2. Latitude and Longitude\n3. Quit")
-    ch = 0
-    try:
-        ch = int(input("Your choice:"))
-    except ValueError:
-        click.echo("Please enter an appropiate choice.")
-        makeAPIcall()
-        return
     baseUrl = "http://api.openweathermap.org/data/2.5/weather?"
     apiKey = "e12c5165e1c9c0996e906b8eaad83cfd"
-    if(ch==1):
-        cityName = ""
-        while(cityName==""):
-            cityName = input("Enter city name : ")
-            if(cityName!=""):
-                break
-        url = f"{baseUrl}appid={apiKey}&q={cityName}"
+    if(location!=''):
+        url = f"{baseUrl}appid={apiKey}&q={location}"
         try:
             response = requests.get(url)
         except:
@@ -183,22 +172,52 @@ def makeAPIcall():
         else:
             click.echo("City not found.")
             return
-    elif(ch==2):
-        flag = True
-        while(flag):
-            lat = float(input("Enter the latitude of the location(in range of -90 deg to 90 deg): "))
-            lon = float(input("Enter the longitude of the location(in range of -180 deg to 180 deg): "))
-            if((lat>-90 and lat<90) and (lon>-180 and lon<180)):
-                flag = False
-            if(flag):
-                click.echo("Please enter the values in appropriate range.")
-    elif(ch==3):
-        return
     else:
-        click.echo("Please enter an appropiate choice.")
-        time.sleep(1)
-        makeAPIcall()
-        return
+        click.echo("Choose one of the two formats(for location):\n1. Name of the city\n2. Latitude and Longitude\n3. Quit")
+        ch = 0
+        try:
+            ch = int(input("Your choice:"))
+        except ValueError:
+            click.echo("Please enter an appropiate choice.")
+            makeAPIcall('')
+            return
+        if(ch==1):
+            cityName = ""
+            while(cityName==""):
+                cityName = input("Enter city name : ")
+                if(cityName!=""):
+                    break
+            url = f"{baseUrl}appid={apiKey}&q={cityName}"
+            try:
+                response = requests.get(url)
+            except:
+                click.echo("Something went wrong.")
+                click.echo("Try checking your internet connection.")
+                input("Click Enter to exit.")
+                return
+            jsonFile = response.json()
+            if (jsonFile['cod'] != "404"):
+                lat = jsonFile["coord"]["lat"]
+                lon = jsonFile["coord"]["lon"]
+            else:
+                click.echo("City not found.")
+                return
+        elif(ch==2):
+            flag = True
+            while(flag):
+                lat = float(input("Enter the latitude of the location(in range of -90 deg to 90 deg): "))
+                lon = float(input("Enter the longitude of the location(in range of -180 deg to 180 deg): "))
+                if((lat>-90 and lat<90) and (lon>-180 and lon<180)):
+                    flag = False
+                if(flag):
+                    click.echo("Please enter the values in appropriate range.")
+        elif(ch==3):
+            return
+        else:
+            click.echo("Please enter an appropiate choice.")
+            time.sleep(1)
+            makeAPIcall('')
+            return
 
     url = f"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={apiKey}"
     try:
@@ -361,7 +380,7 @@ def menu(user):
             except ValueError:
                 click.echo("Please enter an appropiate choice.")
         if(ch==1):
-            makeAPIcall()
+            makeAPIcall('')
         elif(ch==2):
             updateInfo(user)
         elif(ch==3):

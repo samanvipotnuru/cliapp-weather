@@ -77,6 +77,22 @@ myapp weather
 
 This command lets you check the weather of any particular location at specified time from today till 5 days. But you need to login first.
 
+```
+myapp weather --help
+```
+
+```
+Usage: myapp weather [OPTIONS]
+
+  Use it find the weather
+
+Options:
+  -l, --location TEXT  Location
+  --help               Show this message and exit.
+```
+
+You can also provide the --location as an argument when calling the weather command and it will directly show you it's weather.
+
 ### 7. run
 
 ```
