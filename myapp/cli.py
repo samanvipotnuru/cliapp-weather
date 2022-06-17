@@ -255,7 +255,8 @@ def makeAPIcall(location):
             if(chOfDate not in range(1,i)):
                 flag = True
                 click.echo("Invalid choice. Choose again.")
-            flag = False
+            else:
+                flag = False
 
         chOfDate-=1
         listOfTimes = []
@@ -277,7 +278,8 @@ def makeAPIcall(location):
             if(chOfTime not in range(1,i)):
                 flag = True
                 click.echo("Invalid choice. Choose again.")
-            flag = False
+            else:
+                flag = False
 
         chOfTime-=1
         if(jsonFile['city']['name']!=""):
